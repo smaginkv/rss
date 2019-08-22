@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>News aggregator</title>
+<link href="../../static/css/main.css" th:href="@{/css/main.css}"
+	rel="stylesheet" />
+</head>
+
+<body>
+	<h1>Add new subscription</h1>
+	
+	<form th:object="${news_url}" method="post">
+	
+		<div class="element">
+			<label for="url">url:</label>
+    		<input type="text" th:field="*{url}"></input>
+    	</div>
+    
+    	<div class="element">
+	   		<label for="className">rule:</label>
+	    	<select th:field="*{className}">
+				<option th:each="ruleClass : ${allAvailableRuleClass}" th:value="${ruleClass}"
+					th:text="${ruleClass}">
+				</option>
+			</select>
+		</div>
+		
+		<div class = "command">
+			<button type="submit">Save and close</button>
+		</div>
+	
+    </form>
+</body>
+</html>
+    

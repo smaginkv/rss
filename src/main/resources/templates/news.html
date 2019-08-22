@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>News aggregator</title>
+<link href="../../static/css/main.css" th:href="@{/css/main.css}"
+	rel="stylesheet" />
+</head>
+
+<body>
+
+	<h1>Latest news on your subscription</h1>
+
+	<form th:action="@{/new_sub}" class="command">
+		<button type="submit">
+			<img src="../static/images/insert.png" alt="New sub"
+				th:src="@{/images/insert.png}" title="New subscription"
+				style="vertical-align: middle" />
+		</button>
+	</form>
+
+	<form th:action="@{/}" class="command">		
+		<button type="submit" name="refresh_news">
+			<img src="../static/images/refresh.png" alt="Refresh news"
+				th:src="@{/images/refresh.png}" title="get news manual"
+				style="vertical-align: middle" />
+		</button>
+	</form>
+	
+	<form th:action="@{/}" style="margin:-10px 0px 0px 0px">
+		<input type="text" th:name="title"></input>
+		<button type="submit" name="search_by_title">search</button>
+	</form>
+
+	<div th:if="${page.totalPages > 0}">
+		<h3 th:text="${page.number+1} + ' of ' + ${page.totalPages}"></h3>
+	</div>
+	<div th:unless="${page.totalPages > 0}">
+		<h3>No news here</h3>
+	</div>
+
+	<span th:if="${page.hasPrevious() == true}"><a
+		th:href="@{/(page=${page.number-1})}">Previous </a></span>
+	<span th:if="${page.hasNext() == true}"><a
+		th:href="@{/(page=${page.number+1})}">Next</a></span>
+
+
+	<ul th:each="news : ${page.content}">
+		<li>
+			<div>
+				<span th:text="${news.title}"></span> <span> <a href=""
+					th:href="${news.link}">"click to view"</a></span>
+			</div>
+		</li>
+	</ul>
+</body>
+</html>

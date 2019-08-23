@@ -17,7 +17,7 @@ import com.tochka.rss.conversion.FieldsConversionRule;
 import com.tochka.rss.db.FieldsConversionService;
 import com.tochka.rss.db.NewsURL_Service;
 import com.tochka.rss.domain.NewsURL;
-import com.tochka.rss.parsing.Parsable;
+import com.tochka.rss.parsing.ParsingRule;
 
 @Controller
 public class SubscriptionController {
@@ -51,10 +51,10 @@ public class SubscriptionController {
 	@ModelAttribute("allAvailableRuleClass")
 	public List<String> populateAvailableRuleClass() {
 		Reflections parsingPackage = new Reflections("com.tochka.rss");
-		Set<Class<? extends Parsable>> subTypes = parsingPackage.getSubTypesOf(Parsable.class);
+		Set<Class<? extends ParsingRule>> subTypes = parsingPackage.getSubTypesOf(ParsingRule.class);
 		
 		ArrayList<String> namesArray = new ArrayList<>();
-		for(Class<? extends Parsable> subType: subTypes) {
+		for(Class<? extends ParsingRule> subType: subTypes) {
 			if(subType.isAnnotationPresent(Component.class)) {
 				namesArray.add(subType.getAnnotation(Component.class).value());	
 			}			

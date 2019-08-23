@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import com.tochka.rss.db.NewsURL_Service;
 import com.tochka.rss.domain.NewsURL;
 import com.tochka.rss.exception.InstanceFillingException;
-import com.tochka.rss.parsing.Parsable;
+import com.tochka.rss.parsing.ParsingRule;
 
 @Component
 public class ProcessingURL {
@@ -48,7 +48,7 @@ public class ProcessingURL {
 		}
 		
 		//value in annotation 'component'
-		Parsable parseRule = (Parsable) context.getBean(className);
+		ParsingRule parseRule = (ParsingRule) context.getBean(className);
 		
 		parseRule.getNewsByURL(newsURL);
 	}

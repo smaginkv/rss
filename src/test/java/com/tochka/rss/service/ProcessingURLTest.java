@@ -16,7 +16,7 @@ import org.springframework.context.ApplicationContext;
 import com.tochka.rss.db.NewsURL_Service;
 import com.tochka.rss.domain.NewsURL;
 import com.tochka.rss.parsing.SimpleXML_ParseRule;
-import com.tochka.rss.parsing.Parsable;
+import com.tochka.rss.parsing.ParsingRule;
 
 public class ProcessingURLTest {
 	private static final String TEST_CLASS_NAME = "test class name";
@@ -45,7 +45,7 @@ public class ProcessingURLTest {
 		
 		NewsURL_Service mockNewsUrlRepo = prepareNewsUrlRepo();
 		
-		Parsable parseRule = mock(SimpleXML_ParseRule.class);		
+		ParsingRule parseRule = mock(SimpleXML_ParseRule.class);		
 		ApplicationContext appContext = prepareAppContext(parseRule);
 		
 		ProcessingURL processingURL = new ProcessingURL(appContext, mockNewsUrlRepo);
@@ -63,7 +63,7 @@ public class ProcessingURLTest {
 		return mockNewsUrlRepo;
 	}
 	
-	private ApplicationContext prepareAppContext(Parsable parseRule) {
+	private ApplicationContext prepareAppContext(ParsingRule parseRule) {
 		ApplicationContext appContext = mock(ApplicationContext.class);
 		when(appContext.getBean(TEST_CLASS_NAME)).thenReturn(parseRule);
 		return appContext;

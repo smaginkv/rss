@@ -11,7 +11,7 @@ import com.tochka.rss.domain.NewsURL;
 import com.tochka.rss.exception.InstanceFillingException;
 import com.tochka.rss.service.XML_Factory;
 
-public abstract class Parsable {
+public abstract class ParsingRule {
 	protected NewsService newsRepo;
 	protected XML_Factory xmlFactory;
 	protected Map<String, NewsField> fieldsMap;

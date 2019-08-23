@@ -21,7 +21,7 @@ import com.tochka.rss.exception.InstanceFillingException;
 import com.tochka.rss.service.XML_Factory;
 
 @Component(value = "simple string xml")
-public class SimpleXML_ParseRule extends Parsable {
+public class SimpleXML_ParseRule extends ParsingRule {
 
 	@Autowired
 	public SimpleXML_ParseRule(NewsService newsRepo, XML_Factory xmlFactory) {

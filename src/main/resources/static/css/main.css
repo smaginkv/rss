@@ -1,0 +1,16 @@
+body {
+	margin: 10px;
+}
+
+.element {
+	margin: 10px 10px 10px 0px;
+}
+
+.command {
+	margin: 20px 10px 20px 0px;
+}
+
+.inline {
+	margin: 10px 10px 10px 0px;
+	display: inline-block;
+}

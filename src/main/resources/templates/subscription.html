@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>News aggregator</title>
+<link href="../../static/css/main.css" th:href="@{/css/main.css}"
+	rel="stylesheet" />
+</head>
+
+<body>
+	<h1>Add new subscription</h1>
+	
+	<form th:object="${news_url}" method="post">
+	
+		<div class="element">
+			<label for="url">url:</label>
+    		<input type="text" th:field="*{url}"></input>
+    	</div>
+    
+    	<div class="element">
+	   		<label for="className">rule:</label>
+	    	<select th:field="*{className}">
+				<option th:each="ruleClass : ${allAvailableRuleClass}" th:value="${ruleClass}"
+					th:text="${ruleClass}">
+				</option>
+			</select>
+		</div>
+		
+		<div class="inline element">
+	   		<label for="conversion">Conversion:</label>
+	    	<select th:field="*{conversion.id}">
+				<option th:each="availableConvers : ${allAvailableConversion}" th:value="${availableConvers.id}"
+					th:text="${availableConvers.title}">
+				</option>
+			</select>
+		</div>
+		
+		<div class="inline element">
+			<button type="submit"  name="addConversion">
+				<img src="../static/images/insert.png" alt="New conversion"
+					th:src="@{/images/insert.png}" title="New conversion"
+					style="vertical-align: middle" />
+			</button>
+		</div>
+		
+		<div class="command">
+			<button type="submit">Save and close</button>
+		</div>
+	</form>
+		
+</body>
+</html>
+    

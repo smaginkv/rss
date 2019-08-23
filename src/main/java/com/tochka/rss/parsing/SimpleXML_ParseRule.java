@@ -1,16 +1,11 @@
 package com.tochka.rss.parsing;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.XMLEvent;
@@ -18,28 +13,27 @@ import javax.xml.stream.events.XMLEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.tochka.rss.conversion.NewsField;
 import com.tochka.rss.db.NewsService;
 import com.tochka.rss.domain.News;
+import com.tochka.rss.domain.NewsURL;
 import com.tochka.rss.exception.InstanceFillingException;
+import com.tochka.rss.service.XML_Factory;
 
-@Component
-public class LentaParseRule implements Parsable {
-	private final String ITEM;
-	private NewsService newsRepo;
-	private Map<String, NewsField> fieldsMap;
+@Component(value = "simple string xml")
+public class SimpleXML_ParseRule extends Parsable {
 
 	@Autowired
-	public LentaParseRule(NewsService newsRepo) {
+	public SimpleXML_ParseRule(NewsService newsRepo, XML_Factory xmlFactory) {
 		this.newsRepo = newsRepo;
-		
-		// i want to have all settings to parsing in one place
-		ITEM = "item";
-		fieldsMap = getFieldsMap();
+		this.xmlFactory = xmlFactory;
 	}
 
 	@Override
-	public void getNewsByURL(String strUrl) throws InstanceFillingException, XMLStreamException, IOException {
-		XMLEventReader xmlReader = getXmlReader(strUrl);
+	public void getNewsByURL(NewsURL newsUrl) throws InstanceFillingException, XMLStreamException, IOException {
+		itemTag = newsUrl.getConversion().getItemTag();
+		fieldsMap = newsUrl.getConversion().getFieldsMap();
+		XMLEventReader xmlReader = xmlFactory.getXmlReader(newsUrl.getUrl());
 
 		while (xmlReader.hasNext()) {
 			XMLEvent event = xmlReader.nextEvent();
@@ -49,12 +43,12 @@ public class LentaParseRule implements Parsable {
 				continue;
 			}
 
-			if (event.isStartElement() && nodeName.equalsIgnoreCase(ITEM)) {
+			if (event.isStartElement() && nodeName.equalsIgnoreCase(itemTag)) {
 				clearField();
 			}
 
-			else if (event.isEndElement() && nodeName.equalsIgnoreCase(ITEM)) {
-				saveInstance();
+			else if (event.isEndElement() && nodeName.equalsIgnoreCase(itemTag)) {
+				saveInstance(newsUrl);
 
 			} else if (event.isStartElement()) {
 				parseNode(nodeName, xmlReader);
@@ -62,7 +56,7 @@ public class LentaParseRule implements Parsable {
 		}
 	}
 
-	private void saveInstance() throws InstanceFillingException {
+	private void saveInstance(NewsURL newsURL) throws InstanceFillingException {
 		News news = new News();
 
 		for (NewsField newsField : fieldsMap.values()) {
@@ -80,6 +74,7 @@ public class LentaParseRule implements Parsable {
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				throw new InstanceFillingException(e);
 			}
+			news.setNewsURL(newsURL);
 		}
 
 		newsRepo.saveOrUpdate(news);
@@ -125,43 +120,5 @@ public class LentaParseRule implements Parsable {
 			result = event.asCharacters().getData();
 		}
 		return result;
-	}
-
-	private XMLEventReader getXmlReader(String strUrl) throws IOException, XMLStreamException {
-		XMLInputFactory xmlFactory = XMLInputFactory.newInstance();
-		URL url = new URL(strUrl);
-		InputStream inStream = url.openStream();
-
-		return xmlFactory.createXMLEventReader(inStream);
-	}
-
-	private Map<String, NewsField> getFieldsMap() {
-		HashMap<String, NewsField> map = new HashMap<>();
-
-		map.put("link", new NewsField("Link"));
-		map.put("title", new NewsField("Title"));
-		return map;
-	}
-
-	private class NewsField {
-		public final String fieldsName;
-		public String value;
-
-		public NewsField(String fieldsName) {
-			this.fieldsName = fieldsName;
-			this.value = "";
-		}
-
-		public String getFieldsName() {
-			return fieldsName;
-		}
-
-		public String getValue() {
-			return value;
-		}
-
-		public void setValue(String value) {
-			this.value = value;
-		}
 	}
 }

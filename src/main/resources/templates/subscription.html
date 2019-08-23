@@ -25,11 +25,28 @@
 			</select>
 		</div>
 		
-		<div class = "command">
+		<div class="inline element">
+	   		<label for="conversion">Conversion:</label>
+	    	<select th:field="*{conversion.id}">
+				<option th:each="availableConvers : ${allAvailableConversion}" th:value="${availableConvers.id}"
+					th:text="${availableConvers.title}">
+				</option>
+			</select>
+		</div>
+		
+		<div class="inline element">
+			<button type="submit"  name="addConversion">
+				<img src="../static/images/insert.png" alt="New conversion"
+					th:src="@{/images/insert.png}" title="New conversion"
+					style="vertical-align: middle" />
+			</button>
+		</div>
+		
+		<div class="command">
 			<button type="submit">Save and close</button>
 		</div>
-	
-    </form>
+	</form>
+		
 </body>
 </html>
     

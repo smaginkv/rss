@@ -10,7 +10,7 @@
 
 	<h1>Latest news on your subscription</h1>
 
-	<form th:action="@{/new_sub}" class="command">
+	<form th:action="@{/new_sub}" class="inline">
 		<button type="submit">
 			<img src="../static/images/insert.png" alt="New sub"
 				th:src="@{/images/insert.png}" title="New subscription"
@@ -18,7 +18,7 @@
 		</button>
 	</form>
 
-	<form th:action="@{/}" class="command">		
+	<form th:action="@{/}" class="inline">		
 		<button type="submit" name="refresh_news">
 			<img src="../static/images/refresh.png" alt="Refresh news"
 				th:src="@{/images/refresh.png}" title="get news manual"
@@ -26,7 +26,7 @@
 		</button>
 	</form>
 	
-	<form th:action="@{/}" style="margin:-10px 0px 0px 0px">
+	<form th:action="@{/}" class="element">
 		<input type="text" th:name="title"></input>
 		<button type="submit" name="search_by_title">search</button>
 	</form>

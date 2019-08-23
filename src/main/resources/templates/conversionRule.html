@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>News aggregator</title>
+<link href="../../static/css/main.css" th:href="@{/css/main.css}"
+	rel="stylesheet" />
+</head>
+
+<body>
+    <h1>Add new conversion rule</h1>
+    
+    <form th:object="${conversion_rule}" method="post">
+	
+		<div class="element">
+			<label for="title">title:</label>
+    		<input type="text" th:field="*{title}"></input>
+    	</div>
+    	
+    	<div class="element">
+			<label for="itemTag">item tag:</label>
+    		<input type="text" th:field="*{itemTag}"></input>
+    	</div>
+    
+    	<div>
+            <table>
+                <caption>
+                    <b>Field conversion rule</b>
+                </caption>
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <button type="submit" name="addField">
+                                <img
+                                    src="../static/images/insert.png"
+                                    alt="insert"
+                                    th:src="@{/images/insert.png}"
+                                    style="vertical-align: middle" />
+                            </button>
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>N</th>
+                        <th>Fields name</th>
+                        <th>XML node name</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="field,fieldStat : *{fields}">
+                        <td th:text="${fieldStat.count}">1</td>
+                        <td><input type="text"
+                            th:field="*{fields[__${fieldStat.index}__].fieldsName}" /></td>
+                        <td><input type="text"
+                            th:field="*{fields[__${fieldStat.index}__].xmlNodeName}" /></td>
+                        <td><button type="submit"
+                                name="removeField"
+                                th:value="${fieldStat.index}">
+                                <img
+                                    src="../static/images/remove.png"
+                                    th:src="@{/images/remove.png}"
+                                    alt="insert"
+                                    style="vertical-align: middle" />
+                            </button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+		
+		<div class = "command">
+			<button type="submit">Save and close</button>
+		</div>
+	
+    </form>
+        
+</body>

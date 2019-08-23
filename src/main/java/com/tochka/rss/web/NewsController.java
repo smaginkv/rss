@@ -26,8 +26,9 @@ public class NewsController {
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String getNewsListForm(Model model, Pageable pageable) {
-		Pageable newPageable = PageRequest.of(pageable.getPageNumber(), 10);
+	public String getNewsListForm(Model model, @RequestParam(name = "page", required = false) Integer pageIndex) {
+		pageIndex = (pageIndex == null) ? 0 : pageIndex;
+		Pageable newPageable = PageRequest.of(pageIndex, 10);
 		Page<News> page = newsRepo.findPage(newPageable);
 		model.addAttribute("page", page);
 		return "news";
@@ -40,8 +41,9 @@ public class NewsController {
 	}
 
 	@RequestMapping(value = "/", params = { "search_by_title" }, method = RequestMethod.GET)
-	public String searchNews(Model model, Pageable pageable, @RequestParam("title") String title) {
-		Pageable newPageable = PageRequest.of(pageable.getPageNumber(), 10);
+	public String searchNews(Model model, @RequestParam(name = "page", required = false) Integer pageIndex, @RequestParam("title") String title) {
+		pageIndex = (pageIndex == null) ? 0 : pageIndex;
+		Pageable newPageable = PageRequest.of(pageIndex, 10);
 		Page<News> page = newsRepo.findPageByTitle(newPageable, title);
 		model.addAttribute("page", page);
 		return "news";

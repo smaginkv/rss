@@ -7,12 +7,14 @@ import java.util.Set;
 
 import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.tochka.rss.conversion.FieldsConversionRule;
+import com.tochka.rss.db.FieldsConversionService;
 import com.tochka.rss.db.NewsURL_Service;
 import com.tochka.rss.domain.NewsURL;
 import com.tochka.rss.parsing.Parsable;
@@ -21,16 +23,23 @@ import com.tochka.rss.parsing.Parsable;
 public class SubscriptionController {
 
 	private final NewsURL_Service newsUrlRepo;
+	private final FieldsConversionService conversionRepo;
 	
 	@Autowired
-	public SubscriptionController(ApplicationContext context, NewsURL_Service newsUrlRepo) {
-		this.newsUrlRepo = newsUrlRepo; 
+	public SubscriptionController(NewsURL_Service newsUrlRepo, FieldsConversionService conversionRepo) {
+		this.newsUrlRepo = newsUrlRepo;
+		this.conversionRepo = conversionRepo;
 	}
 	
 	@RequestMapping(value = "/new_sub", method=RequestMethod.GET)
 	public String getSubscriptionForm(Map<String,Object> model) {
 		model.put("news_url", new NewsURL());
 		return "subscription";
+	}
+	
+	@RequestMapping(value ="/new_sub", params={"addConversion"}, method=RequestMethod.POST)
+	public String getNewConversion() {
+		return "redirect:/conversion";
 	}
 	
 	@RequestMapping(value ="/new_sub", method=RequestMethod.POST)
@@ -46,8 +55,16 @@ public class SubscriptionController {
 		
 		ArrayList<String> namesArray = new ArrayList<>();
 		for(Class<? extends Parsable> subType: subTypes) {
-			namesArray.add(subType.getName());
+			if(subType.isAnnotationPresent(Component.class)) {
+				namesArray.add(subType.getAnnotation(Component.class).value());	
+			}			
 		}
 	    return namesArray;
+	}
+	
+	@ModelAttribute("allAvailableConversion")
+	public List<FieldsConversionRule> populateAvailableConversion() {
+		List<FieldsConversionRule> conversion = conversionRepo.findAll();
+	    return conversion;
 	}
 }

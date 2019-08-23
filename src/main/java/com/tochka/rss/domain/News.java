@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class News {
@@ -15,13 +16,16 @@ public class News {
 	@Column(length = 1000)
 	private String title;
 
-	@Column()
+	@Column
 	private String link;
+	
+	@ManyToOne(optional = false)
+	private NewsURL newsURL;
 
 	public void setTitle(String title) {
 		this.title = title;
 	}
-
+	
 	public void setLink(String link) {
 		this.link = link;
 	}
@@ -32,5 +36,13 @@ public class News {
 
 	public String getLink() {
 		return link;
+	}
+
+	public NewsURL getNewsURL() {
+		return newsURL;
+	}
+
+	public void setNewsURL(NewsURL newsURL) {
+		this.newsURL = newsURL;
 	}
 }

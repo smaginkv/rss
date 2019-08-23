@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -17,13 +16,14 @@ import com.tochka.rss.parsing.Parsable;
 
 @Component
 public class ProcessingURL {
-	private ApplicationContext context;
+	
 	private NewsURL_Service newsUrlRepo;
+	private ApplicationContext context;
 
 	@Autowired
 	public ProcessingURL(ApplicationContext context, NewsURL_Service newsUrlRepo) {
-		this.context = context;
 		this.newsUrlRepo = newsUrlRepo;
+		this.context = context;
 	}
 
 	public void updateNews() {
@@ -31,7 +31,7 @@ public class ProcessingURL {
 		List<NewsURL> listUrl = newsUrlRepo.findAll();
 		for (NewsURL url : listUrl) {
 			try {
-				performParsing(context, url);
+				performParsing(url);
 			} catch (Exception e) {
 				// TODO record to error log
 				System.out.println(e.getMessage());
@@ -39,15 +39,17 @@ public class ProcessingURL {
 		}
 	}
 	
-	private void performParsing(ApplicationContext context, NewsURL newsURL)
-			throws BeansException, ClassNotFoundException, XMLStreamException, InstanceFillingException, IOException {
-		String className = newsURL.getClassName();
-		String url = newsURL.getUrl();
-
+	private void performParsing(NewsURL newsURL) throws XMLStreamException, InstanceFillingException, IOException {
+		
+		String url = newsURL.getUrl(), className = newsURL.getClassName();
+		
 		if (className.isEmpty() || url.isEmpty()) {
 			throw new IllegalArgumentException("url or rule parsing is not filled");
 		}
-		Parsable parseRule = (Parsable) context.getBean(Class.forName(className));
-		parseRule.getNewsByURL(url);
+		
+		//value in annotation 'component'
+		Parsable parseRule = (Parsable) context.getBean(className);
+		
+		parseRule.getNewsByURL(newsURL);
 	}
 }

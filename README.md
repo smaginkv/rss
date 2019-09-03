@@ -19,19 +19,19 @@ After the conversation, you have to open the command line, go to the project fol
 
 Open your browser and go to the page: http://localhost:8080/ and click new subscription button.
 
-![main page](src\main\resources\docs\main page.png "page screen")
+![main page](src\main\resources\docs\main_page.png "page screen")
 
 Than you have to add new or choose existing conversion rule.
 
-![choose conv](src\main\resources\docs\choose conv rule.png "page screen")
+![choose conv](src\main\resources\docs\choose_conv_rule.png "page screen")
 
 if you want to add new rule, you have to populate it by extra info.
 
-![new conv](src\main\resources\docs\new conv rule.png "page screen")
+![new conv](src\main\resources\docs\new_conv_rule.png "page screen")
 
 Than type the link to rss and choose your conversation rule.
 
-![Add sub](src\main\resources\docs\add sub.png "page screen")
+![Add sub](src\main\resources\docs\add_sub.png "page screen")
  
 Wait about two minutes for the aggregator to load your news.
 
